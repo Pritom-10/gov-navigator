@@ -1,11 +1,15 @@
-import OpenAI from "openai";
+import { GoogleGenAI } from "@google/genai";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export async function embed(text: string): Promise<number[]> {
-  const res = await openai.embeddings.create({
-    model: "text-embedding-3-small", 
-    input: text,
+  const res = await ai.models.embedContent({
+    model: "gemini-embedding-001",
+    contents: text,
+    config: { outputDimensionality: 1536 },
   });
-  return res.data[0].embedding;
+
+  const values = res.embeddings?.[0]?.values;
+  if (!values) throw new Error("Embedding পাওয়া যায়নি");
+  return values;
 }
