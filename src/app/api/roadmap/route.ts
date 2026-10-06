@@ -19,6 +19,7 @@ export async function POST(req: Request) {
     service.feeBdt != null ? `${service.feeBdt} টাকা` : service.feeNote ?? null;
 
   const view = {
+    slug: service.slug,
     title: service.titleBn,
     office: service.officeType,
     fee,
