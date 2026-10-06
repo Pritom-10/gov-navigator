@@ -25,6 +25,10 @@ export async function POST(req: Request) {
     time: service.timeEstimate,
     sourceUrl: service.sourceUrl,
     verified: service.verifiedAt !== null,
+        verifiedAt: service.verifiedAt ? service.verifiedAt.toISOString() : null,
+    daysSinceVerified: service.verifiedAt
+      ? Math.floor((Date.now() - service.verifiedAt.getTime()) / 86400000)
+      : null,
     steps: service.steps.map((s) => ({ id: s.id, title: s.titleBn, detail: s.detailBn })),
     documents: service.documents.map((d) => ({
       id: d.id,
