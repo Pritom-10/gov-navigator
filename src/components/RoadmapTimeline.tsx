@@ -10,6 +10,8 @@ export type ServiceView = {
   time: string | null;
   sourceUrl: string | null;
   verified: boolean;
+  verifiedAt: string | null;
+  daysSinceVerified: number | null;
   steps: { id: string; title: string; detail: string }[];
   documents: { id: string; name: string; required: boolean; note: string | null }[];
 };
@@ -50,9 +52,17 @@ export default function RoadmapTimeline({
       >
         <h2 className="text-xl font-semibold">{service.title}</h2>
 
-        {!service.verified && (
+                {service.daysSinceVerified === null ? (
           <p className="mt-2 text-sm text-amber-500">
             সতর্কতা: এই তথ্য এখনো যাচাই করা হয়নি। অফিসে যাওয়ার আগে সরকারি ওয়েবসাইটে মিলিয়ে নাও।
+          </p>
+        ) : service.daysSinceVerified > 90 ? (
+          <p className="mt-2 text-sm text-amber-500">
+            সতর্কতা: তথ্যটি {service.daysSinceVerified} দিন আগে যাচাই করা, নিয়ম বদলে থাকতে পারে। অফিসে যাওয়ার আগে সরকারি সূত্রে মিলিয়ে নাও।
+          </p>
+        ) : (
+          <p className="mt-2 text-sm opacity-70">
+            তথ্য যাচাইয়ের তারিখ: {new Date(service.verifiedAt!).toLocaleDateString("bn-BD")}
           </p>
         )}
 
