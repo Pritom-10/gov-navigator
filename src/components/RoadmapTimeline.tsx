@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import DraftGenerator from "./DraftGenerator";
 
 export type ServiceView = {
+  slug: string;
   title: string;
   office: string;
   fee: string | null;
@@ -155,6 +157,7 @@ export default function RoadmapTimeline({
           ))}
         </ul>
       </section>
+            <DraftGenerator slug={service.slug} />
     </div>
   );
 }
