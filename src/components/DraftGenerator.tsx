@@ -123,6 +123,7 @@ export default function DraftGenerator({ slug }: { slug: string }) {
           <textarea
             className={`${inputClass} font-[inherit] leading-relaxed`}
             rows={16}
+            readOnly={loading}
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
           />
