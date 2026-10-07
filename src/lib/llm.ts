@@ -11,3 +11,16 @@ export async function explain(prompt: string, system: string): Promise<string> {
   });
   return res.text ?? "";
 }
+
+
+export async function* explainStream(prompt: string, system: string) {
+  const stream = await ai.models.generateContentStream({
+    model: MODEL,
+    contents: prompt,
+    config: { systemInstruction: system },
+  });
+
+  for await (const chunk of stream) {
+    if (chunk.text) yield chunk.text;
+  }
+}

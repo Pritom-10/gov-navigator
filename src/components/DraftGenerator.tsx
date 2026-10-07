@@ -25,7 +25,7 @@ export default function DraftGenerator({ slug }: { slug: string }) {
     (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
       setForm((f) => ({ ...f, [key]: e.target.value }));
 
-  async function submit(e: FormEvent) {
+   async function submit(e: FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError("");
@@ -36,9 +36,27 @@ export default function DraftGenerator({ slug }: { slug: string }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ slug, ...form }),
       });
-      const data = await res.json();
-      if (!res.ok) setError(data.error ?? "কিছু একটা ভুল হয়েছে");
-      else setDraft(data.draft);
+
+     
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error ?? "কিছু একটা ভুল হয়েছে");
+        return;
+      }
+
+      const reader = res.body?.getReader();
+      if (!reader) {
+        setError("উত্তর পড়া যাচ্ছে না, আবার চেষ্টা করো");
+        return;
+      }
+
+   
+      const decoder = new TextDecoder();
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        setDraft((d) => d + decoder.decode(value, { stream: true }));
+      }
     } catch {
       setError("সংযোগে সমস্যা হয়েছে, আবার চেষ্টা করো");
     } finally {
