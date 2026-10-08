@@ -1,12 +1,18 @@
 "use client";
 
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useState, type ChangeEvent, type Dispatch, type FormEvent, type SetStateAction } from "react";
 import { motion } from "framer-motion";
 
 const inputClass =
   "w-full rounded-xl border border-gray-400/50 bg-transparent px-4 py-2.5 outline-none focus:border-emerald-500";
 
-export default function DraftGenerator({ slug }: { slug: string }) {
+export default function DraftGenerator({ slug,
+  draft,
+  setDraft,
+}: {
+  slug: string;
+  draft: string;
+  setDraft: Dispatch<SetStateAction<string>>; }) {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({
     name: "",
@@ -16,7 +22,7 @@ export default function DraftGenerator({ slug }: { slug: string }) {
     problem: "",
   });
   const [loading, setLoading] = useState(false);
-  const [draft, setDraft] = useState("");
+
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
 

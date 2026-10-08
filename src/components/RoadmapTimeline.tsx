@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import DraftGenerator from "./DraftGenerator";
 import ReadAloud from "./ReadAloud";
+import PrintView from "./PrintView";
 
 export type ServiceView = {
   slug: string;
@@ -40,6 +41,7 @@ export default function RoadmapTimeline({
   service: ServiceView;
 }) {
   const [done, setDone] = useState<Record<string, boolean>>({});
+  const [draft, setDraft] = useState("");
   const toggle = (id: string) => setDone((d) => ({ ...d, [id]: !d[id] }));
 
   const allIds = [...service.steps.map((s) => s.id), ...service.documents.map((d) => d.id)];
@@ -57,7 +59,8 @@ export default function RoadmapTimeline({
     .join(" ");
 
   return (
-    <div className="space-y-8">
+    <>
+    <div className="space-y-8 print:hidden">
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -80,6 +83,13 @@ export default function RoadmapTimeline({
         )}
 
         {intro && <p className="mt-3 leading-relaxed">{intro}</p>}
+                <button
+          type="button"
+          onClick={() => window.print()}
+          className="mr-2 mt-3 rounded-xl border border-gray-400/50 px-4 py-2 text-sm"
+        >
+          প্রিন্ট / PDF করো
+        </button>
         <ReadAloud text={readText} />
 
         <div className="mt-4 flex flex-wrap gap-2 text-sm">
@@ -169,7 +179,11 @@ export default function RoadmapTimeline({
           ))}
         </ul>
       </section>
-            <DraftGenerator slug={service.slug} />
+            <DraftGenerator slug={service.slug} draft={draft} setDraft={setDraft} />
+              
     </div>
+    <PrintView service={service} intro={intro} done={done} draft={draft} />
+     </>
+    
   );
 }
