@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import DraftGenerator from "./DraftGenerator";
+import ReadAloud from "./ReadAloud";
 
 export type ServiceView = {
   slug: string;
@@ -45,6 +46,16 @@ export default function RoadmapTimeline({
   const doneCount = allIds.filter((id) => done[id]).length;
   const percent = allIds.length ? Math.round((doneCount / allIds.length) * 100) : 0;
 
+    const readText = [
+    intro,
+    ...service.steps.map((s, i) => `ধাপ ${i + 1}। ${s.title}। ${s.detail}`),
+    service.documents.length
+      ? "যে কাগজ লাগবে। " + service.documents.map((d) => d.name).join("। ")
+      : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
     <div className="space-y-8">
       <motion.div
@@ -69,6 +80,7 @@ export default function RoadmapTimeline({
         )}
 
         {intro && <p className="mt-3 leading-relaxed">{intro}</p>}
+        <ReadAloud text={readText} />
 
         <div className="mt-4 flex flex-wrap gap-2 text-sm">
           <span className="rounded-full bg-gray-500/15 px-3 py-1">অফিস: {service.office}</span>
