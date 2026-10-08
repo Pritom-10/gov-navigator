@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
 import RoadmapTimeline, { type ServiceView } from "@/components/RoadmapTimeline";
+import VoiceInput from "@/components/VoiceInput";
 
 type ApiResult = { found: boolean; intro?: string; service?: ServiceView; error?: string };
 
@@ -10,17 +11,17 @@ export default function Home() {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<ApiResult | null>(null);
+  const [voiceMsg, setVoiceMsg] = useState("");
 
-  async function submit(e: FormEvent) {
-    e.preventDefault();
-    if (!query.trim()) return;
+  async function search(q: string) {
+    if (!q.trim()) return;
     setLoading(true);
     setData(null);
     try {
       const res = await fetch("/api/roadmap", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query }),
+        body: JSON.stringify({ query: q }),
       });
       setData(await res.json());
     } catch {
@@ -28,6 +29,11 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
+  }
+
+  function submit(e: FormEvent) {
+    e.preventDefault();
+    search(query);
   }
 
   return (
@@ -39,7 +45,7 @@ export default function Home() {
       >
         সরকারি সেবা নেভিগেটর
       </motion.h1>
-      <p className="mt-2 opacity-80">তোমার সমস্যাটা সাধারণ ভাষায় লেখো, কী করতে হবে আমরা দেখিয়ে দেব।</p>
+      <p className="mt-2 opacity-80">তোমার সমস্যাটা সাধারণ ভাষায় লেখো বা মাইকে বলো, কী করতে হবে আমরা দেখিয়ে দেব।</p>
 
       <form onSubmit={submit} className="mt-6 flex gap-2">
         <input
@@ -47,6 +53,14 @@ export default function Home() {
           onChange={(e) => setQuery(e.target.value)}
           placeholder="যেমন: NID কার্ডে আমার নাম ভুল আছে"
           className="flex-1 rounded-xl border border-gray-400/50 bg-transparent px-4 py-3 outline-none focus:border-emerald-500"
+        />
+        <VoiceInput
+          disabled={loading}
+          onError={setVoiceMsg}
+          onText={(text) => {
+            setQuery(text);
+            search(text);
+          }}
         />
         <button
           type="submit"
@@ -56,6 +70,11 @@ export default function Home() {
           {loading ? "খুঁজছি..." : "খুঁজুন"}
         </button>
       </form>
+
+      {voiceMsg && <p className="mt-2 text-sm text-red-500">{voiceMsg}</p>}
+      <p className="mt-2 text-xs opacity-60">
+        মাইক ব্যবহার করলে তোমার কণ্ঠস্বর ব্রাউজারের বাক-শনাক্তকরণ সেবায় (Chrome-এ Google-এর সার্ভারে) পাঠানো হয়।
+      </p>
 
       <div className="mt-8">
         {data?.found && data.service && (
@@ -67,6 +86,10 @@ export default function Home() {
           </p>
         )}
       </div>
+
+      <footer className="mt-16 border-t border-gray-400/30 pt-4 text-xs opacity-70">
+        এটি একটি শেখার ও পোর্টফোলিও প্রকল্প, কোনো সরকারি সংস্থার ওয়েবসাইট নয়। অফিসে যাওয়ার আগে অবশ্যই সরকারি সূত্রে তথ্য মিলিয়ে নিন।
+      </footer>
     </main>
   );
 }
