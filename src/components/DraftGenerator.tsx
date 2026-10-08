@@ -4,7 +4,7 @@ import { useState, type ChangeEvent, type Dispatch, type FormEvent, type SetStat
 import { motion } from "framer-motion";
 
 const inputClass =
-  "w-full rounded-xl border border-gray-400/50 bg-transparent px-4 py-2.5 outline-none focus:border-emerald-500";
+  "w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100";
 
 export default function DraftGenerator({ slug,
   draft,

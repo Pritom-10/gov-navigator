@@ -57,8 +57,7 @@ export default function ReadAloud({ text }: { text: string }) {
     <button
       type="button"
       onClick={toggle}
-      className="mt-3 rounded-xl border border-gray-400/50 px-4 py-2 text-sm"
-    >
+      className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm hover:bg-slate-50"    >
       {speaking ? "থামাও" : "পড়ে শোনাও"}
     </button>
   );

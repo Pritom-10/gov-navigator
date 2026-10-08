@@ -94,7 +94,7 @@ export default function VoiceInput({
       animate={listening ? { scale: [1, 1.12, 1] } : { scale: 1 }}
       transition={listening ? { repeat: Infinity, duration: 1 } : {}}
       className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border transition-colors disabled:opacity-50 ${
-        listening ? "border-red-500 bg-red-500 text-white" : "border-gray-400/50"
+     listening ? "border-red-500 bg-red-500 text-white" : "border-slate-300 bg-white hover:bg-slate-50"
       }`}
     >
       <svg
