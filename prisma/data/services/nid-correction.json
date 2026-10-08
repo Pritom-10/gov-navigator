@@ -2,7 +2,7 @@
   "slug": "nid-correction",
   "titleBn": "জাতীয় পরিচয়পত্রে নাম সংশোধন",
   "titleEn": "NID Name Correction",
-  "category": "NID",
+  "category": "জাতীয় পরিচয়পত্র (NID)",
   "description": "NID কার্ডে নামের ভুল সংশোধন করার প্রক্রিয়া",
   "officeType": "অনলাইনে আবেদন: services.nidw.gov.bd পোর্টালের মাধ্যমে। সরাসরি উপস্থিতি প্রয়োজন হলে: সংশ্লিষ্ট উপজেলা/থানা নির্বাচন অফিস বা নির্বাচন কমিশন সচিবালয়ের NID উইং।",
   "feeBdt": 230,

@@ -2,7 +2,7 @@
   "slug": "birth-registration-correction",
   "titleBn": "জন্ম নিবন্ধন সনদে তথ্য সংশোধন",
   "titleEn": "Birth Registration Certificate Correction",
-  "category": "Birth Registration",
+  "category": "জন্মনিবন্ধন",
   "description": "ইতিমধ্যে থাকা জন্মনিবন্ধন সনদের ভুল তথ্য (নাম, জন্মতারিখ, পিতা-মাতার নাম, ঠিকানা) সংশোধন করা। birth certificate correction",
   "officeType": "অনলাইনে আবেদন: bdris.gov.bd পোর্টালের মাধ্যমে। আবেদনপত্র জমা: সংশ্লিষ্ট ইউনিয়ন পরিষদ (UP), পৌরসভা বা সিটি কর্পোরেশনের নিবন্ধক অফিস।",
   "feeBdt": 100,
