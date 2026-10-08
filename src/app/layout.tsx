@@ -1,15 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Noto_Sans_Bengali } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const noto = Noto_Sans_Bengali({
+  subsets: ["bengali", "latin"],
+  variable: "--font-noto",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -17,13 +13,14 @@ export const metadata: Metadata = {
   description: "সাধারণ ভাষায় সমস্যা লিখলে সরকারি সেবার ধাপ, কাগজ আর আবেদনপত্রের খসড়া পাওয়া যাবে",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html
-      lang="bn"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="bn" className={noto.variable}>
+      <body className="antialiased">{children}</body>
     </html>
   );
 }

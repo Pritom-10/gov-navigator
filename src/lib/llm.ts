@@ -12,7 +12,6 @@ export async function explain(prompt: string, system: string): Promise<string> {
   return res.text ?? "";
 }
 
-// লেখা একটু একটু করে (টুকরো টুকরো) পাঠানোর জন্য
 export async function* explainStream(prompt: string, system: string) {
   const stream = await ai.models.generateContentStream({
     model: MODEL,

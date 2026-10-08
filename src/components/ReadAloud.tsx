@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useSyncExternalStore } from "react";
 
-// ব্রাউজার বাংলা কণ্ঠস্বর লোড করলে খবর রাখার জন্য
+
 function subscribe(onChange: () => void) {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) return () => {};
   window.speechSynthesis.addEventListener("voiceschanged", onChange);
@@ -18,7 +18,7 @@ export default function ReadAloud({ text }: { text: string }) {
   const available = useSyncExternalStore(subscribe, hasBengaliVoice, () => false);
   const [speaking, setSpeaking] = useState(false);
 
-  // নতুন সার্চ হলে বা পাতা ছাড়লে পড়া থামিয়ে দেয়
+
   useEffect(() => {
     return () => {
       if ("speechSynthesis" in window) window.speechSynthesis.cancel();
@@ -38,7 +38,7 @@ export default function ReadAloud({ text }: { text: string }) {
       voices.find((v) => v.lang.toLowerCase().replace("_", "-") === "bn-bd") ??
       voices.find((v) => v.lang.toLowerCase().startsWith("bn"));
 
-    // লম্বা লেখা ছোট ছোট টুকরোয় ভেঙে পড়া হয়, নাহলে কিছু ব্রাউজার মাঝপথে থেমে যায়
+  
     const chunks = text.split(/(?<=[।.?!])\s+/).filter(Boolean);
     chunks.forEach((chunk, i) => {
       const u = new SpeechSynthesisUtterance(chunk);

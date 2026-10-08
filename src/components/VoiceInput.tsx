@@ -3,7 +3,7 @@
 import { useRef, useState, useSyncExternalStore } from "react";
 import { motion } from "framer-motion";
 
-// ব্রাউজারের বাক-শনাক্তকরণের জন্য ছোট একটা type (TypeScript-এ এটা আগে থেকে থাকে না)
+
 type RecognitionLike = {
   lang: string;
   interimResults: boolean;
@@ -43,7 +43,7 @@ export default function VoiceInput({
   onError: (message: string) => void;
   disabled?: boolean;
 }) {
-  // সার্ভারে false, ব্রাউজারে আসল উত্তর। সমর্থন না থাকলে বাটন দেখানো হবে না
+ 
   const supported = useSyncExternalStore(
     () => () => {},
     () => getCtor() !== null,

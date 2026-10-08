@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
+import { db } from "@/lib/db";
 import { findService } from "@/lib/match";
 import { explain } from "@/lib/llm";
 
-// কোনো কাজ নির্দিষ্ট সময়ের বেশি লাগলে error দিয়ে থামিয়ে দেয়
 function withTimeout<T>(p: Promise<T>, ms: number, label: string): Promise<T> {
   return new Promise((resolve, reject) => {
     const timer = setTimeout(() => reject(new Error(`${label} ${ms}ms-এ শেষ হয়নি`)), ms);
@@ -19,10 +19,52 @@ function withTimeout<T>(p: Promise<T>, ms: number, label: string): Promise<T> {
   });
 }
 
-export async function POST(req: Request) {
-  const { query } = await req.json();
+type FullService = NonNullable<Awaited<ReturnType<typeof findService>>>;
 
-  if (!query || typeof query !== "string" || query.length > 300) {
+function toView(service: FullService) {
+  const fee =
+    service.feeBdt != null ? `${service.feeBdt} টাকা` : service.feeNote ?? null;
+
+  return {
+    slug: service.slug,
+    title: service.titleBn,
+    office: service.officeType,
+    fee,
+    time: service.timeEstimate,
+    sourceUrl: service.sourceUrl,
+    verified: service.verifiedAt !== null,
+    verifiedAt: service.verifiedAt ? service.verifiedAt.toISOString() : null,
+    daysSinceVerified: service.verifiedAt
+      ? Math.floor((Date.now() - service.verifiedAt.getTime()) / 86400000)
+      : null,
+    steps: service.steps.map((s) => ({ id: s.id, title: s.titleBn, detail: s.detailBn })),
+    documents: service.documents.map((d) => ({
+      id: d.id,
+      name: d.nameBn,
+      required: d.required,
+      note: d.note,
+    })),
+  };
+}
+
+export async function POST(req: Request) {
+  const body = await req.json().catch(() => ({}));
+  const slug = typeof body.slug === "string" ? body.slug.trim().slice(0, 80) : "";
+  const query = typeof body.query === "string" ? body.query : "";
+
+
+  if (slug) {
+    const service = await db.service.findUnique({
+      where: { slug },
+      include: { steps: { orderBy: { order: "asc" } }, documents: true },
+    });
+    if (!service) {
+      return NextResponse.json({ found: false, error: "সেবাটি পাওয়া যায়নি" }, { status: 404 });
+    }
+    return NextResponse.json({ found: true, intro: "", service: toView(service) });
+  }
+
+  if (!query || query.length > 300) {
     return NextResponse.json(
       { found: false, error: "সমস্যাটা ৩০০ অক্ষরের মধ্যে লেখো" },
       { status: 400 }
@@ -47,31 +89,9 @@ export async function POST(req: Request) {
 
   if (!service) return NextResponse.json({ found: false });
 
-  const fee =
-    service.feeBdt != null ? `${service.feeBdt} টাকা` : service.feeNote ?? null;
+  const view = toView(service);
 
-  const view = {
-    slug: service.slug,
-    title: service.titleBn,
-    office: service.officeType,
-    fee,
-    time: service.timeEstimate,
-    sourceUrl: service.sourceUrl,
-    verified: service.verifiedAt !== null,
-    verifiedAt: service.verifiedAt ? service.verifiedAt.toISOString() : null,
-    daysSinceVerified: service.verifiedAt
-      ? Math.floor((Date.now() - service.verifiedAt.getTime()) / 86400000)
-      : null,
-    steps: service.steps.map((s) => ({ id: s.id, title: s.titleBn, detail: s.detailBn })),
-    documents: service.documents.map((d) => ({
-      id: d.id,
-      name: d.nameBn,
-      required: d.required,
-      note: d.note,
-    })),
-  };
 
-  // AI-র ব্যাখ্যা ঐচ্ছিক: ১৫ সেকেন্ডে না এলে ছাড়াই roadmap দেখানো হবে
   let intro = "";
   try {
     intro = await withTimeout(
