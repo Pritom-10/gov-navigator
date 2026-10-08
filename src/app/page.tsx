@@ -41,13 +41,15 @@ export default function Home() {
       <motion.h1
         initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-3xl font-bold"
+        className="text-3xl font-bold print:hidden"
       >
         সরকারি সেবা নেভিগেটর
       </motion.h1>
-      <p className="mt-2 opacity-80">তোমার সমস্যাটা সাধারণ ভাষায় লেখো বা মাইকে বলো, কী করতে হবে আমরা দেখিয়ে দেব।</p>
+      <p className="mt-2 opacity-80 print:hidden">
+        তোমার সমস্যাটা সাধারণ ভাষায় লেখো বা মাইকে বলো, কী করতে হবে আমরা দেখিয়ে দেব।
+      </p>
 
-      <form onSubmit={submit} className="mt-6 flex gap-2">
+      <form onSubmit={submit} className="mt-6 flex gap-2 print:hidden">
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -71,8 +73,8 @@ export default function Home() {
         </button>
       </form>
 
-      {voiceMsg && <p className="mt-2 text-sm text-red-500">{voiceMsg}</p>}
-      <p className="mt-2 text-xs opacity-60">
+      {voiceMsg && <p className="mt-2 text-sm text-red-500 print:hidden">{voiceMsg}</p>}
+      <p className="mt-2 text-xs opacity-60 print:hidden">
         মাইক ব্যবহার করলে তোমার কণ্ঠস্বর ব্রাউজারের বাক-শনাক্তকরণ সেবায় (Chrome-এ Google-এর সার্ভারে) পাঠানো হয়।
       </p>
 
@@ -81,13 +83,13 @@ export default function Home() {
           <RoadmapTimeline key={data.service.title} intro={data.intro ?? ""} service={data.service} />
         )}
         {data && !data.found && (
-          <p className="rounded-xl border border-gray-400/40 p-4">
+          <p className="rounded-xl border border-gray-400/40 p-4 print:hidden">
             {data.error ?? "এই সমস্যার সাথে মেলে এমন কোনো সেবা এখনো আমাদের তালিকায় নেই।"}
           </p>
         )}
       </div>
 
-      <footer className="mt-16 border-t border-gray-400/30 pt-4 text-xs opacity-70">
+      <footer className="mt-16 border-t border-gray-400/30 pt-4 text-xs opacity-70 print:hidden">
         এটি একটি শেখার ও পোর্টফোলিও প্রকল্প, কোনো সরকারি সংস্থার ওয়েবসাইট নয়। অফিসে যাওয়ার আগে অবশ্যই সরকারি সূত্রে তথ্য মিলিয়ে নিন।
       </footer>
     </main>
